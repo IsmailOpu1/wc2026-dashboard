@@ -1,0 +1,216 @@
+// Official FIFA World Cup 2026 groups - confirmed from draw Dec 5 2025
+export const GROUPS = [
+  {
+    id: 'A',
+    teams: [
+      { name: 'Mexico',       code: 'mx', host: true },
+      { name: 'South Korea',  code: 'kr' },
+      { name: 'South Africa', code: 'za' },
+      { name: 'Czechia',      code: 'cz' },
+    ],
+    matches: [
+      { home: 'Mexico',       away: 'South Africa', date: 'Jun 11', venue: 'Mexico City' },
+      { home: 'South Korea',  away: 'Czechia',       date: 'Jun 11', venue: 'Guadalajara' },
+      { home: 'Mexico',       away: 'South Korea',   date: 'Jun 15', venue: 'Guadalajara' },
+      { home: 'Czechia',      away: 'South Africa',  date: 'Jun 15', venue: 'Mexico City' },
+      { home: 'South Korea',  away: 'South Africa',  date: 'Jun 19', venue: 'Dallas' },
+      { home: 'Mexico',       away: 'Czechia',       date: 'Jun 19', venue: 'Dallas' },
+    ],
+  },
+  {
+    id: 'B',
+    teams: [
+      { name: 'Canada',                  code: 'ca', host: true },
+      { name: 'Bosnia and Herzegovina',  code: 'ba' },
+      { name: 'Qatar',                   code: 'qa' },
+      { name: 'Switzerland',             code: 'ch' },
+    ],
+    matches: [
+      { home: 'Canada',                 away: 'Switzerland',             date: 'Jun 12', venue: 'Toronto' },
+      { home: 'Bosnia and Herzegovina', away: 'Qatar',                   date: 'Jun 12', venue: 'Los Angeles' },
+      { home: 'Canada',                 away: 'Qatar',                   date: 'Jun 16', venue: 'Vancouver' },
+      { home: 'Switzerland',            away: 'Bosnia and Herzegovina',  date: 'Jun 17', venue: 'Kansas City' },
+      { home: 'Bosnia and Herzegovina', away: 'Canada',                  date: 'Jun 21', venue: 'Seattle' },
+      { home: 'Qatar',                  away: 'Switzerland',             date: 'Jun 21', venue: 'Seattle' },
+    ],
+  },
+  {
+    id: 'C',
+    teams: [
+      { name: 'Brazil',   code: 'br' },
+      { name: 'Morocco',  code: 'ma' },
+      { name: 'Scotland', code: 'gb-sct' },
+      { name: 'Haiti',    code: 'ht' },
+    ],
+    matches: [
+      { home: 'Brazil',   away: 'Morocco',  date: 'Jun 13', venue: 'Los Angeles' },
+      { home: 'Scotland', away: 'Haiti',    date: 'Jun 13', venue: 'Philadelphia' },
+      { home: 'Brazil',   away: 'Scotland', date: 'Jun 17', venue: 'San Francisco' },
+      { home: 'Morocco',  away: 'Haiti',    date: 'Jun 17', venue: 'Boston' },
+      { home: 'Morocco',  away: 'Scotland', date: 'Jun 21', venue: 'New York' },
+      { home: 'Brazil',   away: 'Haiti',    date: 'Jun 21', venue: 'Houston' },
+    ],
+  },
+  {
+    id: 'D',
+    teams: [
+      { name: 'United States', code: 'us', host: true },
+      { name: 'Türkiye',       code: 'tr' },
+      { name: 'Australia',     code: 'au' },
+      { name: 'Paraguay',      code: 'py' },
+    ],
+    matches: [
+      { home: 'United States', away: 'Türkiye',       date: 'Jun 12', venue: 'Dallas' },
+      { home: 'Australia',     away: 'Paraguay',      date: 'Jun 12', venue: 'Miami' },
+      { home: 'United States', away: 'Australia',     date: 'Jun 16', venue: 'New York' },
+      { home: 'Türkiye',       away: 'Paraguay',      date: 'Jun 16', venue: 'Philadelphia' },
+      { home: 'United States', away: 'Paraguay',      date: 'Jun 20', venue: 'Kansas City' },
+      { home: 'Türkiye',       away: 'Australia',     date: 'Jun 20', venue: 'Los Angeles' },
+    ],
+  },
+  {
+    id: 'E',
+    teams: [
+      { name: 'Germany',       code: 'de' },
+      { name: 'Côte d\'Ivoire',code: 'ci' },
+      { name: 'Ecuador',       code: 'ec' },
+      { name: 'Curaçao',       code: 'cw' },
+    ],
+    matches: [
+      { home: 'Germany',        away: 'Ecuador',        date: 'Jun 13', venue: 'San Francisco' },
+      { home: 'Côte d\'Ivoire', away: 'Curaçao',        date: 'Jun 13', venue: 'Houston' },
+      { home: 'Germany',        away: 'Curaçao',        date: 'Jun 17', venue: 'Dallas' },
+      { home: 'Ecuador',        away: 'Côte d\'Ivoire', date: 'Jun 18', venue: 'Miami' },
+      { home: 'Germany',        away: 'Côte d\'Ivoire', date: 'Jun 22', venue: 'Seattle' },
+      { home: 'Ecuador',        away: 'Curaçao',        date: 'Jun 22', venue: 'Atlanta' },
+    ],
+  },
+  {
+    id: 'F',
+    teams: [
+      { name: 'Netherlands', code: 'nl' },
+      { name: 'Japan',       code: 'jp' },
+      { name: 'Sweden',      code: 'se' },
+      { name: 'Tunisia',     code: 'tn' },
+    ],
+    matches: [
+      { home: 'Netherlands', away: 'Tunisia', date: 'Jun 14', venue: 'Miami' },
+      { home: 'Japan',       away: 'Sweden',  date: 'Jun 14', venue: 'Los Angeles' },
+      { home: 'Netherlands', away: 'Japan',   date: 'Jun 18', venue: 'San Francisco' },
+      { home: 'Sweden',      away: 'Tunisia', date: 'Jun 18', venue: 'Atlanta' },
+      { home: 'Netherlands', away: 'Sweden',  date: 'Jun 22', venue: 'New York' },
+      { home: 'Japan',       away: 'Tunisia', date: 'Jun 22', venue: 'Dallas' },
+    ],
+  },
+  {
+    id: 'G',
+    teams: [
+      { name: 'Belgium',     code: 'be' },
+      { name: 'Egypt',       code: 'eg' },
+      { name: 'IR Iran',     code: 'ir' },
+      { name: 'New Zealand', code: 'nz' },
+    ],
+    matches: [
+      { home: 'Belgium',     away: 'Egypt',       date: 'Jun 14', venue: 'New York' },
+      { home: 'IR Iran',     away: 'New Zealand', date: 'Jun 14', venue: 'Toronto' },
+      { home: 'Belgium',     away: 'New Zealand', date: 'Jun 18', venue: 'Boston' },
+      { home: 'Egypt',       away: 'IR Iran',     date: 'Jun 18', venue: 'Houston' },
+      { home: 'Belgium',     away: 'IR Iran',     date: 'Jun 22', venue: 'Vancouver' },
+      { home: 'Egypt',       away: 'New Zealand', date: 'Jun 22', venue: 'Philadelphia' },
+    ],
+  },
+  {
+    id: 'H',
+    teams: [
+      { name: 'Spain',        code: 'es' },
+      { name: 'Cabo Verde',   code: 'cv' },
+      { name: 'Saudi Arabia', code: 'sa' },
+      { name: 'Uruguay',      code: 'uy' },
+    ],
+    matches: [
+      { home: 'Spain',        away: 'Uruguay',      date: 'Jun 15', venue: 'Kansas City' },
+      { home: 'Cabo Verde',   away: 'Saudi Arabia', date: 'Jun 15', venue: 'Houston' },
+      { home: 'Spain',        away: 'Saudi Arabia', date: 'Jun 19', venue: 'Los Angeles' },
+      { home: 'Uruguay',      away: 'Cabo Verde',   date: 'Jun 19', venue: 'Atlanta' },
+      { home: 'Spain',        away: 'Cabo Verde',   date: 'Jun 23', venue: 'Dallas' },
+      { home: 'Uruguay',      away: 'Saudi Arabia', date: 'Jun 23', venue: 'San Francisco' },
+    ],
+  },
+  {
+    id: 'I',
+    teams: [
+      { name: 'France',  code: 'fr' },
+      { name: 'Senegal', code: 'sn' },
+      { name: 'Iraq',    code: 'iq' },
+      { name: 'Norway',  code: 'no' },
+    ],
+    matches: [
+      { home: 'France',  away: 'Iraq',    date: 'Jun 16', venue: 'Los Angeles' },
+      { home: 'Norway',  away: 'Senegal', date: 'Jun 16', venue: 'Kansas City' },
+      { home: 'France',  away: 'Norway',  date: 'Jun 20', venue: 'Seattle' },
+      { home: 'Senegal', away: 'Iraq',    date: 'Jun 20', venue: 'Boston' },
+      { home: 'France',  away: 'Senegal', date: 'Jun 24', venue: 'New York' },
+      { home: 'Norway',  away: 'Iraq',    date: 'Jun 24', venue: 'Miami' },
+    ],
+  },
+  {
+    id: 'J',
+    teams: [
+      { name: 'Argentina', code: 'ar' },
+      { name: 'Algeria',   code: 'dz' },
+      { name: 'Austria',   code: 'at' },
+      { name: 'Jordan',    code: 'jo' },
+    ],
+    matches: [
+      { home: 'Argentina', away: 'Algeria', date: 'Jun 15', venue: 'Dallas' },
+      { home: 'Austria',   away: 'Jordan',  date: 'Jun 15', venue: 'Philadelphia' },
+      { home: 'Argentina', away: 'Austria', date: 'Jun 19', venue: 'Miami' },
+      { home: 'Algeria',   away: 'Jordan',  date: 'Jun 19', venue: 'Boston' },
+      { home: 'Argentina', away: 'Jordan',  date: 'Jun 23', venue: 'Atlanta' },
+      { home: 'Algeria',   away: 'Austria', date: 'Jun 23', venue: 'San Francisco' },
+    ],
+  },
+  {
+    id: 'K',
+    teams: [
+      { name: 'Portugal',   code: 'pt' },
+      { name: 'Colombia',   code: 'co' },
+      { name: 'DR Congo',   code: 'cd' },
+      { name: 'Uzbekistan', code: 'uz' },
+    ],
+    matches: [
+      { home: 'Portugal',   away: 'Uzbekistan', date: 'Jun 17', venue: 'Los Angeles' },
+      { home: 'Colombia',   away: 'DR Congo',   date: 'Jun 17', venue: 'Houston' },
+      { home: 'Portugal',   away: 'DR Congo',   date: 'Jun 21', venue: 'Atlanta' },
+      { home: 'Colombia',   away: 'Uzbekistan', date: 'Jun 21', venue: 'Dallas' },
+      { home: 'Portugal',   away: 'Colombia',   date: 'Jun 25', venue: 'Miami' },
+      { home: 'DR Congo',   away: 'Uzbekistan', date: 'Jun 25', venue: 'New York' },
+    ],
+  },
+  {
+    id: 'L',
+    teams: [
+      { name: 'England', code: 'gb-eng' },
+      { name: 'Croatia', code: 'hr' },
+      { name: 'Ghana',   code: 'gh' },
+      { name: 'Panama',  code: 'pa' },
+    ],
+    matches: [
+      { home: 'England', away: 'Panama',  date: 'Jun 17', venue: 'San Francisco' },
+      { home: 'Croatia', away: 'Ghana',   date: 'Jun 17', venue: 'Seattle' },
+      { home: 'England', away: 'Croatia', date: 'Jun 21', venue: 'New York' },
+      { home: 'Ghana',   away: 'Panama',  date: 'Jun 21', venue: 'Los Angeles' },
+      { home: 'England', away: 'Ghana',   date: 'Jun 25', venue: 'Boston' },
+      { home: 'Croatia', away: 'Panama',  date: 'Jun 25', venue: 'Philadelphia' },
+    ],
+  },
+]
+
+export const KNOCKOUT_ROUNDS = [
+  { round: 'Round of 32', matches: 16, dates: 'Jun 28 – Jul 2' },
+  { round: 'Round of 16', matches: 8,  dates: 'Jul 4 – Jul 6' },
+  { round: 'Quarter-finals', matches: 4, dates: 'Jul 9 – Jul 11' },
+  { round: 'Semi-finals', matches: 2, dates: 'Jul 15 – Jul 16' },
+  { round: 'Third Place',  matches: 1, dates: 'Jul 18' },
+  { round: 'Final', matches: 1, dates: 'Jul 19 · New York/New Jersey' },
+]
