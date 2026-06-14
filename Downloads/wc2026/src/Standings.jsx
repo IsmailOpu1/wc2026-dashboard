@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { fetchStandings, fetchMatches } from './api.js'
+import { fetchStandings, fetchMatches, clearCache } from './api.js'
 import { Spinner } from './components.jsx'
 import { GROUPS, KNOCKOUT_ROUNDS } from './groupsData.js'
 import { COUNTRY_CODE } from './utils.js'
@@ -14,6 +14,7 @@ function getCode(name) {
   }
   return 'xx'
 }
+const getCodeByName = getCode
 
 function Flag({ name, size = 24 }) {
   const code = getCode(name)
@@ -144,6 +145,13 @@ export default function Standings() {
 
 function GroupStageView({ groups, buildGroupRows, hasLive }) {
   const [selectedGroup, setSelectedGroup] = useState(null)
+  // Only one group's matches open at a time
+  const [openMatchesGroup, setOpenMatchesGroup] = useState(null)
+
+  const toggleMatches = (id) => {
+    setOpenMatchesGroup(prev => (prev === id ? null : id))
+  }
+
   const visible = selectedGroup ? groups.filter(g => g.id === selectedGroup) : groups
 
   return (
@@ -159,28 +167,44 @@ function GroupStageView({ groups, buildGroupRows, hasLive }) {
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(460px, 1fr))', gap: '16px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(460px, 1fr))', gap: '16px', alignItems: 'start' }}>
         {visible.map(g => (
-          <GroupCard key={g.id} group={g} rows={buildGroupRows(g)} hasLive={hasLive} />
+          <GroupCard
+            key={g.id}
+            group={g}
+            rows={buildGroupRows(g)}
+            hasLive={hasLive}
+            showMatches={openMatchesGroup === g.id}
+            onToggleMatches={() => toggleMatches(g.id)}
+          />
         ))}
       </div>
 
+      <p style={{ textAlign: 'center', marginTop: '20px', color: 'var(--faint)', fontSize: '11px', letterSpacing: '0.06em' }}>
+      </p>
     </>
   )
 }
 
-function GroupCard({ group, rows, hasLive }) {
-  const [showMatches, setShowMatches] = useState(false)
+function GroupCard({ group, rows, hasLive, showMatches, onToggleMatches }) {
 
   return (
     <div style={{
       background: 'var(--surface)',
       border: '1px solid var(--border)',
       borderRadius: '16px', overflow: 'hidden',
-      transition: 'border-color 0.2s',
+      transition: 'border-color 0.3s, box-shadow 0.3s, transform 0.3s',
     }}
-      onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(0,200,83,0.3)'}
-      onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+      onMouseEnter={e => {
+        e.currentTarget.style.borderColor = 'rgba(0,200,83,0.55)'
+        e.currentTarget.style.boxShadow = '0 0 28px rgba(0,200,83,0.16), 0 0 80px rgba(0,200,83,0.06), inset 0 0 30px rgba(0,200,83,0.025)'
+        e.currentTarget.style.transform = 'translateY(-3px)'
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.borderColor = 'var(--border)'
+        e.currentTarget.style.boxShadow = 'none'
+        e.currentTarget.style.transform = 'translateY(0)'
+      }}
     >
       {/* Card header */}
       <div style={{
@@ -292,7 +316,7 @@ function GroupCard({ group, rows, hasLive }) {
       </div>
 
       {/* Matches toggle */}
-      <button onClick={() => setShowMatches(v => !v)} style={{
+      <button onClick={onToggleMatches} style={{
         width: '100%', padding: '10px 18px',
         background: 'rgba(255,255,255,0.02)', border: 'none',
         borderTop: '1px solid var(--border)',
@@ -307,17 +331,39 @@ function GroupCard({ group, rows, hasLive }) {
         <div style={{ padding: '4px 18px 14px' }}>
           {group.matches.map((m, i) => (
             <div key={i} style={{
-              display: 'grid', gridTemplateColumns: '1fr 100px 1fr',
+              display: 'grid', gridTemplateColumns: '1fr 110px 1fr',
               alignItems: 'center', gap: '8px',
               padding: '9px 0',
               borderTop: i === 0 ? 'none' : '1px solid var(--border)',
             }}>
-              <span style={{ fontWeight: 700, fontSize: '13px', textAlign: 'right' }}>{m.home}</span>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontFamily: 'var(--font-disp)', fontSize: '13px', fontWeight: 800, color: 'var(--amber)', letterSpacing: '0.04em' }}>{m.date}</div>
-                <div style={{ fontSize: '10px', color: 'var(--faint)', marginTop: '1px' }}>{m.venue}</div>
+              {/* Home team — flag + name right-aligned */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '7px' }}>
+                <span style={{ fontWeight: 700, fontSize: '13px', textAlign: 'right' }}>{m.home}</span>
+                <img
+                  src={`https://flagcdn.com/h20/${getCodeByName(m.home)}.png`}
+                  alt={m.home}
+                  style={{ width: '22px', height: '14px', objectFit: 'cover', borderRadius: '2px', flexShrink: 0 }}
+                  onError={e => e.target.style.display = 'none'}
+                />
               </div>
-              <span style={{ fontWeight: 700, fontSize: '13px' }}>{m.away}</span>
+              {/* Date + venue */}
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontFamily: 'var(--font-disp)', fontWeight: 800, color: 'var(--amber)', letterSpacing: '0', lineHeight: 1.2 }}>
+                  <div style={{ fontSize: '11px' }}>{m.date.split(' ')[0]}</div>
+                  <div style={{ fontSize: '18px' }}>{m.date.split(' ')[1]}</div>
+                </div>
+                <div style={{ fontSize: '10px', color: 'var(--faint)', marginTop: '3px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{m.venue}</div>
+              </div>
+              {/* Away team — flag + name left-aligned */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+                <img
+                  src={`https://flagcdn.com/h20/${getCodeByName(m.away)}.png`}
+                  alt={m.away}
+                  style={{ width: '22px', height: '14px', objectFit: 'cover', borderRadius: '2px', flexShrink: 0 }}
+                  onError={e => e.target.style.display = 'none'}
+                />
+                <span style={{ fontWeight: 700, fontSize: '13px' }}>{m.away}</span>
+              </div>
             </div>
           ))}
         </div>

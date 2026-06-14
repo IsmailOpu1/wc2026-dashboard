@@ -1,39 +1,70 @@
+// ── API cache — 5 minute TTL, survives 429 rate limit errors ──────────────────
+const CACHE = new Map()
+const CACHE_TTL = 45 * 1000 // 45 s — short enough to catch kick-offs without hammering the API
+
+function getCached(key) {
+  const entry = CACHE.get(key)
+  if (!entry) return null
+  if (Date.now() - entry.ts > CACHE_TTL) { CACHE.delete(key); return null }
+  return entry.data
+}
+
+function setCache(key, data) {
+  CACHE.set(key, { data, ts: Date.now() })
+}
+
+// ── Base config ───────────────────────────────────────────────────────────────
 const BASE = import.meta.env.DEV
   ? '/api/v4'
   : 'https://api.football-data.org/v4'
 
-const CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
-
-function headers() {
+function authHeaders() {
   const key = import.meta.env.VITE_FOOTBALL_API_KEY
   if (!key) throw new Error('VITE_FOOTBALL_API_KEY is not set.')
   return { 'X-Auth-Token': key }
 }
 
-function getCached(key) {
-  try {
-    const cached = localStorage.getItem(key)
-    if (!cached) return null
-    const { data, timestamp } = JSON.parse(cached)
-    if (Date.now() - timestamp > CACHE_DURATION) return null
-    return data
-  } catch {
-    return null
-  }
-}
-
-function setCached(key, data) {
-  try {
-    localStorage.setItem(key, JSON.stringify({ data, timestamp: Date.now() }))
-  } catch {}
-}
-
-export async function fetchStandings() {
-  const cacheKey = 'wc2026_standings'
+// ── Smart fetch: cache-first, retry on 429 ───────────────────────────────────
+async function smartFetch(url, cacheKey) {
+  // 1. Return cache if fresh
   const cached = getCached(cacheKey)
   if (cached) return cached
 
-  // Try 2026 first, fall back to no season param (gets current/latest)
+  // 2. Try the request
+  try {
+    const res = await fetch(url, { headers: authHeaders() })
+
+    // Rate limited — serve stale cache if available, else throw
+    if (res.status === 429) {
+      const stale = CACHE.get(cacheKey)
+      if (stale) {
+        console.warn('Rate limited (429) — serving stale cache from', new Date(stale.ts).toLocaleTimeString())
+        return stale.data
+      }
+      const retryAfter = res.headers.get('X-RateLimit-Reset') || res.headers.get('Retry-After')
+      throw new Error(`Rate limited. Try again ${retryAfter ? `after ${retryAfter}` : 'in a minute'}.`)
+    }
+
+    if (!res.ok) throw new Error(`API error ${res.status}`)
+
+    const data = await res.json()
+    setCache(cacheKey, data)
+    return data
+
+  } catch (e) {
+    // Network error — try stale cache before giving up
+    const stale = CACHE.get(cacheKey)
+    if (stale) {
+      console.warn('Network error — serving stale cache')
+      return stale.data
+    }
+    throw e
+  }
+}
+
+// ── Public API functions ──────────────────────────────────────────────────────
+export async function fetchStandings() {
+  // Try 2026 season first, fall back to current
   const urls = [
     `${BASE}/competitions/WC/standings?season=2026`,
     `${BASE}/competitions/WC/standings`,
@@ -41,24 +72,16 @@ export async function fetchStandings() {
   let lastErr
   for (const url of urls) {
     try {
-      const res = await fetch(url, { headers: headers() })
-      if (!res.ok) { lastErr = `API ${res.status}`; continue }
-      const data = await res.json()
-      // football-data returns TOTAL, HOME, AWAY — we only want TOTAL
+      const data = await smartFetch(url, `standings:${url}`)
+      // football-data returns TOTAL, HOME, AWAY — only want TOTAL
       const standings = (data.standings || []).filter(g => g.type === 'TOTAL')
-      const result = { ...data, standings }
-      setCached(cacheKey, result)
-      return result
-    } catch (e) { lastErr = e.message }
+      return { ...data, standings }
+    } catch (e) { lastErr = e }
   }
-  throw new Error(lastErr || 'Failed to fetch standings')
+  throw lastErr || new Error('Failed to fetch standings')
 }
 
 export async function fetchMatches(status = '') {
-  const cacheKey = `wc2026_matches_${status}`
-  const cached = getCached(cacheKey)
-  if (cached) return cached
-
   const urls = [
     `${BASE}/competitions/WC/matches${status ? `?status=${status}&season=2026` : '?season=2026'}`,
     `${BASE}/competitions/WC/matches${status ? `?status=${status}` : ''}`,
@@ -66,12 +89,13 @@ export async function fetchMatches(status = '') {
   let lastErr
   for (const url of urls) {
     try {
-      const res = await fetch(url, { headers: headers() })
-      if (!res.ok) { lastErr = `API ${res.status}`; continue }
-      const data = await res.json()
-      setCached(cacheKey, data)
-      return data
-    } catch (e) { lastErr = e.message }
+      return await smartFetch(url, `matches:${url}`)
+    } catch (e) { lastErr = e }
   }
-  throw new Error(lastErr || 'Failed to fetch matches')
+  throw lastErr || new Error('Failed to fetch matches')
+}
+
+// Force-refresh bypasses cache (for manual refresh button)
+export function clearCache() {
+  CACHE.clear()
 }
