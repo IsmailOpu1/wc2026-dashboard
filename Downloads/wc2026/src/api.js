@@ -14,9 +14,7 @@ function setCache(key, data) {
 }
 
 // ── Base config ───────────────────────────────────────────────────────────────
-const BASE = import.meta.env.DEV
-  ? '/api/v4'
-  : 'https://api.football-data.org/v4'
+const BASE = '/api/v4'
 
 function authHeaders() {
   const key = import.meta.env.VITE_FOOTBALL_API_KEY
