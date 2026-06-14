@@ -180,8 +180,6 @@ function GroupStageView({ groups, buildGroupRows, hasLive }) {
         ))}
       </div>
 
-      <p style={{ textAlign: 'center', marginTop: '20px', color: 'var(--faint)', fontSize: '11px', letterSpacing: '0.06em' }}>
-      </p>
     </>
   )
 }

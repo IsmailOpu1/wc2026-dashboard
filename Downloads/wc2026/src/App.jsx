@@ -2,20 +2,9 @@ import { useState, useEffect } from 'react'
 import Standings from './Standings.jsx'
 import Matches from './Matches.jsx'
 import { fetchMatches } from './api.js'
-import { COUNTRY_CODE } from './utils.js'
 import { LiveDot } from './components.jsx'
 
 const WATCH_LINK = 'https://roxiestreams.su/soccer-streams-1'
-
-function getCode(name) {
-  if (!name) return 'xx'
-  if (COUNTRY_CODE[name]) return COUNTRY_CODE[name]
-  const lower = name.toLowerCase()
-  for (const [k, v] of Object.entries(COUNTRY_CODE)) {
-    if (lower.includes(k.toLowerCase()) || k.toLowerCase().includes(lower)) return v
-  }
-  return 'xx'
-}
 
 // Pre-computed particle positions for animated background
 const PARTICLES = [

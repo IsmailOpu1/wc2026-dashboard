@@ -325,8 +325,8 @@ function MatchCard({ match }) {
   const hasScore   = hScore !== null && hScore !== undefined
   const sl = statusLabel(match.status)
 
-  const rawGroup = match.group?.replace(/^Group\s*/i, '') || getGroupForMatch(home, away)
-  const groupLetter = rawGroup && rawGroup.length <= 2 ? rawGroup : rawGroup
+  const rawGroup   = match.group?.replace(/^Group\s*/i, '') || getGroupForMatch(home, away)
+  const groupLetter = rawGroup || null
   const stageLabel  = !groupLetter ? (match.stage || '') : null
 
   // Team color glow on hover
