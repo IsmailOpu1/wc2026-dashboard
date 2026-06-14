@@ -3,7 +3,6 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "rewrites": [
-    { "source": "/api/v4/(.*)", "destination": "https://api.football-data.org/v4/$1" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/api/v4/(.*)", "destination": "https://api.football-data.org/v4/$1" }
   ]
 }
