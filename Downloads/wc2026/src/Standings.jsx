@@ -167,7 +167,7 @@ function GroupStageView({ groups, buildGroupRows, hasLive }) {
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(460px, 1fr))', gap: '16px', alignItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 460px), 1fr))', gap: '16px', alignItems: 'start' }}>
         {visible.map(g => (
           <GroupCard
             key={g.id}
@@ -328,10 +328,7 @@ function GroupCard({ group, rows, hasLive, showMatches, onToggleMatches }) {
       {showMatches && (
         <div style={{ padding: '4px 18px 14px' }}>
           {group.matches.map((m, i) => (
-            <div key={i} style={{
-              display: 'grid', gridTemplateColumns: '1fr 110px 1fr',
-              alignItems: 'center', gap: '8px',
-              padding: '9px 0',
+            <div key={i} className="group-match-row" style={{
               borderTop: i === 0 ? 'none' : '1px solid var(--border)',
             }}>
               {/* Home team — flag + name right-aligned */}

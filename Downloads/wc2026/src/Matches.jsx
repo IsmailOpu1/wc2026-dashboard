@@ -225,7 +225,7 @@ function GroupMatchSection({ matches }) {
   return (
     <div style={{ marginBottom: '36px' }}>
       <SectionHeader title="GROUP STAGE" icon="⚽" color="var(--green)" count={matches.length} />
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '12px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 360px), 1fr))', gap: '12px' }}>
         {matches.map(m => <MatchCard key={m.id} match={m} />)}
       </div>
     </div>
@@ -285,7 +285,7 @@ function KnockoutMatchSection({ matches }) {
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '12px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 360px), 1fr))', gap: '12px' }}>
               {stageMatches.map(m => <MatchCard key={m.id} match={m} />)}
             </div>
           </div>
@@ -415,7 +415,7 @@ function MatchCard({ match }) {
 
       {/* Teams + Score */}
       <div style={{ padding: '16px 18px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: '10px' }}>
+        <div className="match-card-grid">
 
           {/* Home */}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '6px' }}>
@@ -429,9 +429,7 @@ function MatchCard({ match }) {
           <div style={{ textAlign: 'center', minWidth: '88px' }}>
             {hasScore ? (
               <>
-                <div style={{
-                  fontFamily: 'var(--font-disp)', fontSize: '40px', fontWeight: 900,
-                  lineHeight: 1, letterSpacing: '3px',
+                <div className="match-score" style={{
                   color: isLive ? 'var(--red)' : isFinished ? 'var(--text)' : 'var(--faint)',
                 }}>
                   {hScore}<span style={{ color: 'var(--faint)', margin: '0 2px' }}>–</span>{aScore}

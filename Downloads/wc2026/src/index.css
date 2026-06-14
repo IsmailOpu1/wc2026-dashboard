@@ -67,3 +67,144 @@ button, a, [role='button'] {
 }
 
 .fade-up { animation: fadeUp 0.35s ease forwards; }
+
+/* ── Responsive Layout Helper Classes ────────────────────────────────────── */
+
+/* Hero grid layout */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+@media (min-width: 768px) {
+  .hero-grid.has-live {
+    grid-template-columns: 1fr 320px;
+    gap: 36px;
+  }
+}
+
+/* Header & Main containers */
+.header-container {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px 0;
+}
+
+.main-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 28px 24px 80px;
+}
+
+/* Stats strip (Hero banner) */
+.stats-strip {
+  display: flex;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  max-width: 440px;
+  box-shadow: 0 0 40px rgba(0,200,83,0.06);
+}
+
+/* Tab buttons */
+.tab-button {
+  font-family: var(--font-disp);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 12px 28px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+/* Match card layouts */
+.match-card-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+.match-score {
+  font-family: var(--font-disp);
+  font-size: 40px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 3px;
+}
+
+/* Standings / Group stage dropdown rows */
+.group-match-row {
+  display: grid;
+  grid-template-columns: 1fr 100px 1fr;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 0;
+}
+
+/* Mobile responsive overrides */
+@media (max-width: 768px) {
+  .header-container {
+    padding: 24px 16px 0;
+  }
+
+  .main-container {
+    padding: 20px 12px 60px;
+  }
+
+  .tab-button {
+    flex: 1;
+    padding: 10px 10px;
+    font-size: 15px;
+    text-align: center;
+  }
+
+  .stats-strip {
+    flex-wrap: wrap;
+    max-width: 100%;
+  }
+
+  .stats-strip > div {
+    flex: 1 1 50% !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border);
+    padding: 10px 0 !important;
+  }
+
+  .stats-strip > div:nth-child(odd) {
+    border-right: 1px solid var(--border) !important;
+  }
+
+  .stats-strip > div:nth-child(3),
+  .stats-strip > div:nth-child(4) {
+    border-bottom: none;
+  }
+
+  .match-card-grid {
+    gap: 6px;
+  }
+
+  .match-score {
+    font-size: 32px;
+    letter-spacing: 1px;
+  }
+
+  .group-match-row {
+    grid-template-columns: 1fr 70px 1fr;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 380px) {
+  .match-score {
+    font-size: 28px;
+  }
+}

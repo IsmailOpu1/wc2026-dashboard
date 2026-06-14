@@ -131,7 +131,7 @@ function LiveHeroWidget({ liveMatches }) {
             )}
 
             {/* Teams + score */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: '10px' }}>
+            <div className="match-card-grid">
               {/* Home */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '5px' }}>
                 {homeCrest
@@ -239,16 +239,10 @@ export default function App() {
           pointerEvents: 'none',
         }} />
 
-        <div style={{ position: 'relative', maxWidth: '1100px', margin: '0 auto', padding: '40px 24px 0' }}>
+        <div className="header-container">
 
           {/* ── Two-column layout: left = title/stats, right = live widget ── */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: liveMatches.length > 0 ? '1fr 320px' : '1fr',
-            gap: '36px',
-            alignItems: 'center',
-            marginBottom: '32px',
-          }}>
+          <div className={`hero-grid ${liveMatches.length > 0 ? 'has-live' : ''}`}>
 
             {/* Left column */}
             <div>
@@ -285,13 +279,7 @@ export default function App() {
               </p>
 
               {/* Stats strip */}
-              <div style={{
-                display: 'flex', gap: '0',
-                background: 'var(--surface)', border: '1px solid var(--border)',
-                borderRadius: '14px', overflow: 'hidden',
-                maxWidth: '440px',
-                boxShadow: '0 0 40px rgba(0,200,83,0.06)',
-              }}>
+              <div className="stats-strip">
                 {[['48','Teams'],['12','Groups'],['104','Matches'],['3','Hosts']].map(([n,l], i, arr) => (
                   <div key={l} style={{
                     flex: 1, textAlign: 'center', padding: '14px 0',
@@ -319,14 +307,9 @@ export default function App() {
           {/* Tabs — full width */}
           <div style={{ display: 'flex', gap: '4px', borderBottom: '1px solid var(--border)' }}>
             {[['standings','📊  Standings'],['matches','⚽  Matches']].map(([id, label]) => (
-              <button key={id} onClick={() => setTab(id)} style={{
-                fontFamily: 'var(--font-disp)',
-                fontSize: '17px', fontWeight: 700, letterSpacing: '0.03em',
-                padding: '12px 28px', border: 'none', background: 'transparent', cursor: 'pointer',
+              <button key={id} onClick={() => setTab(id)} className="tab-button" style={{
                 color: tab === id ? 'var(--green)' : 'var(--muted)',
                 borderBottom: tab === id ? '3px solid var(--green)' : '3px solid transparent',
-                marginBottom: '-1px',
-                transition: 'color 0.15s, border-color 0.15s',
                 textShadow: tab === id ? '0 0 20px rgba(0,200,83,0.5)' : 'none',
               }}>
                 {label}
@@ -337,7 +320,7 @@ export default function App() {
       </header>
 
       {/* ── CONTENT ─────────────────────────────────────── */}
-      <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '28px 24px 80px' }}>
+      <main className="main-container">
         {tab === 'standings' && <Standings />}
         {tab === 'matches'   && <Matches />}
       </main>
