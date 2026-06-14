@@ -76,28 +76,6 @@ Open [http://localhost:5173](http://localhost:5173)
 
 ---
 
-## 🚀 Deploy to Vercel
-
-### Step 1 — Get a free API key
-1. Go to [football-data.org/client/register](https://www.football-data.org/client/register)
-2. Sign up (free, instant)
-3. Copy your API key
-
-### Step 2 — Deploy
-1. Go to [vercel.com](https://vercel.com) and log in with GitHub
-2. Click **Add New Project** → import `wc2026-dashboard`
-3. Click **Deploy** (Vite is auto-detected)
-
-### Step 3 — Add environment variable
-In Vercel → your project → **Settings** → **Environment Variables**:
-- Name: `VITE_FOOTBALL_API_KEY`
-- Value: your key from Step 1
-
-### Step 4 — Redeploy
-Go to **Deployments** → three dots → **Redeploy**. Done!
-
----
-
 ## 🧱 Stack
 
 | Layer | Technology |
