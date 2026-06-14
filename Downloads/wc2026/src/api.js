@@ -14,12 +14,24 @@ function setCache(key, data) {
 }
 
 // ── Base config ───────────────────────────────────────────────────────────────
-const BASE = '/api/v4'
+const IS_DEV = import.meta.env.DEV
 
-function authHeaders() {
+function getHeaders() {
+  // In production, Vercel Serverless Function injects the key securely.
+  // We only send the header locally where Vite proxy expects it.
+  if (!IS_DEV) return {}
+
   const key = import.meta.env.VITE_FOOTBALL_API_KEY
-  if (!key) throw new Error('VITE_FOOTBALL_API_KEY is not set.')
+  if (!key) throw new Error('VITE_FOOTBALL_API_KEY is not set in local environment.')
   return { 'X-Auth-Token': key }
+}
+
+function buildUrl(endpoint, params = '') {
+  if (IS_DEV) {
+    return `/api/v4/${endpoint}${params ? `?${params}` : ''}`
+  } else {
+    return `/api/football?endpoint=${endpoint}${params ? `&${params}` : ''}`
+  }
 }
 
 // ── Smart fetch: cache-first, retry on 429 ───────────────────────────────────
@@ -30,7 +42,7 @@ async function smartFetch(url, cacheKey) {
 
   // 2. Try the request
   try {
-    const res = await fetch(url, { headers: authHeaders() })
+    const res = await fetch(url, { headers: getHeaders() })
 
     // Rate limited — serve stale cache if available, else throw
     if (res.status === 429) {
@@ -64,8 +76,8 @@ async function smartFetch(url, cacheKey) {
 export async function fetchStandings() {
   // Try 2026 season first, fall back to current
   const urls = [
-    `${BASE}/competitions/WC/standings?season=2026`,
-    `${BASE}/competitions/WC/standings`,
+    buildUrl('competitions/WC/standings', 'season=2026'),
+    buildUrl('competitions/WC/standings'),
   ]
   let lastErr
   for (const url of urls) {
@@ -81,8 +93,8 @@ export async function fetchStandings() {
 
 export async function fetchMatches(status = '') {
   const urls = [
-    `${BASE}/competitions/WC/matches${status ? `?status=${status}&season=2026` : '?season=2026'}`,
-    `${BASE}/competitions/WC/matches${status ? `?status=${status}` : ''}`,
+    buildUrl('competitions/WC/matches', status ? `status=${status}&season=2026` : 'season=2026'),
+    buildUrl('competitions/WC/matches', status ? `status=${status}` : ''),
   ]
   let lastErr
   for (const url of urls) {
