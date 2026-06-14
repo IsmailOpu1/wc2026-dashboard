@@ -1,16 +1,29 @@
 // ── API cache — 5 minute TTL, survives 429 rate limit errors ──────────────────
-const CACHE = new Map()
-const CACHE_TTL = 45 * 1000 // 45 s — short enough to catch kick-offs without hammering the API
+const CACHE_TTL = 5 * 60 * 1000 // 5 minutes
 
 function getCached(key) {
-  const entry = CACHE.get(key)
-  if (!entry) return null
-  if (Date.now() - entry.ts > CACHE_TTL) { CACHE.delete(key); return null }
-  return entry.data
+  try {
+    const serialized = sessionStorage.getItem(`wc2026_cache_${key}`)
+    if (!serialized) return null
+    const entry = JSON.parse(serialized)
+    if (Date.now() - entry.ts > CACHE_TTL) {
+      sessionStorage.removeItem(`wc2026_cache_${key}`)
+      return null
+    }
+    return entry.data
+  } catch (e) {
+    console.error('Cache read error', e)
+    return null
+  }
 }
 
 function setCache(key, data) {
-  CACHE.set(key, { data, ts: Date.now() })
+  try {
+    const entry = { data, ts: Date.now() }
+    sessionStorage.setItem(`wc2026_cache_${key}`, JSON.stringify(entry))
+  } catch (e) {
+    console.error('Cache write error', e)
+  }
 }
 
 // ── Base config ───────────────────────────────────────────────────────────────
@@ -107,5 +120,14 @@ export async function fetchMatches(status = '') {
 
 // Force-refresh bypasses cache (for manual refresh button)
 export function clearCache() {
-  CACHE.clear()
+  try {
+    for (let i = sessionStorage.length - 1; i >= 0; i--) {
+      const key = sessionStorage.key(i)
+      if (key && key.startsWith('wc2026_cache_')) {
+        sessionStorage.removeItem(key)
+      }
+    }
+  } catch (e) {
+    console.error('Cache clear error', e)
+  }
 }

@@ -30,6 +30,11 @@ export default async function handler(req, res) {
 
     const data = await response.json();
     
+    // Enable Edge Caching on Vercel CDN to protect the API key from rate limits
+    if (response.status === 200) {
+      res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate=60');
+    }
+    
     // Pass the exact status code from the football API (e.g., 429 if rate limited)
     res.status(response.status).json(data);
   } catch (error) {
