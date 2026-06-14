@@ -97,7 +97,6 @@ function LiveHeroWidget({ liveMatches }) {
       borderRadius: '16px', overflow: 'hidden',
       backdropFilter: 'blur(14px)',
       boxShadow: '0 0 40px rgba(255,61,61,0.1), 0 0 0 1px rgba(255,61,61,0.08)',
-      animation: 'fadeUp 0.4s ease forwards',
     }}>
       {/* Header */}
       <div style={{
@@ -124,15 +123,16 @@ function LiveHeroWidget({ liveMatches }) {
       {liveMatches.map((m, i) => {
         const home   = m.homeTeam?.name || 'TBD'
         const away   = m.awayTeam?.name || 'TBD'
-        const hScore = m.score?.fullTime?.home ?? '–'
-        const aScore = m.score?.fullTime?.away ?? '–'
+        const homeCrest = m.homeTeam?.crest
+        const awayCrest = m.awayTeam?.crest
+        const hScore = m.score?.fullTime?.home != null ? m.score.fullTime.home : '–'
+        const aScore = m.score?.fullTime?.away != null ? m.score.fullTime.away : '–'
         const group  = m.group?.replace(/^GROUP_/, 'GROUP ') || ''
 
         return (
           <div key={m.id} style={{
             padding: '14px 16px',
             borderTop: i > 0 ? '1px solid rgba(255,255,255,0.05)' : 'none',
-            background: i % 2 === 1 ? 'rgba(255,61,61,0.03)' : 'transparent',
           }}>
             {/* Group label */}
             {group && (
@@ -145,18 +145,17 @@ function LiveHeroWidget({ liveMatches }) {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: '10px' }}>
               {/* Home */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '5px' }}>
-                <img
-                  src={`https://flagcdn.com/h20/${getCode(home)}.png`} alt={home}
-                  style={{ width: '28px', height: '18px', objectFit: 'cover', borderRadius: '3px' }}
-                  onError={e => e.target.style.display = 'none'}
-                />
+                {homeCrest
+                  ? <img src={homeCrest} alt={home} style={{ width: '32px', height: '32px', objectFit: 'contain' }} onError={e => e.target.style.display='none'} />
+                  : <span style={{ fontSize: '22px' }}>🏴</span>
+                }
                 <span style={{ fontSize: '12px', fontWeight: 700, textAlign: 'right', color: 'var(--text)', lineHeight: 1.2 }}>
                   {home}
                 </span>
               </div>
 
               {/* Score */}
-              <div style={{ textAlign: 'center', minWidth: '60px' }}>
+              <div style={{ textAlign: 'center', minWidth: '64px' }}>
                 <div style={{
                   fontFamily: 'var(--font-disp)', fontSize: '32px', fontWeight: 900,
                   color: 'var(--red)', lineHeight: 1, letterSpacing: '2px',
@@ -171,11 +170,10 @@ function LiveHeroWidget({ liveMatches }) {
 
               {/* Away */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '5px' }}>
-                <img
-                  src={`https://flagcdn.com/h20/${getCode(away)}.png`} alt={away}
-                  style={{ width: '28px', height: '18px', objectFit: 'cover', borderRadius: '3px' }}
-                  onError={e => e.target.style.display = 'none'}
-                />
+                {awayCrest
+                  ? <img src={awayCrest} alt={away} style={{ width: '32px', height: '32px', objectFit: 'contain' }} onError={e => e.target.style.display='none'} />
+                  : <span style={{ fontSize: '22px' }}>🏴</span>
+                }
                 <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text)', lineHeight: 1.2 }}>
                   {away}
                 </span>
