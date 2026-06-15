@@ -32,7 +32,19 @@ export default async function handler(req, res) {
     
     // Enable Edge Caching on Vercel CDN to protect the API key from rate limits
     if (response.status === 200) {
-      res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate=60');
+      let isLiveMatch = false;
+      if (endpoint && endpoint.includes('matches')) {
+        const matches = data.matches || [];
+        isLiveMatch = matches.some(m => m.status === 'IN_PLAY' || m.status === 'PAUSED');
+      }
+      
+      if (isLiveMatch) {
+        // Active live match: cache for only 10 seconds, stale-while-revalidate for 5 seconds
+        res.setHeader('Cache-Control', 's-maxage=10, stale-while-revalidate=5');
+      } else {
+        // Non-live match or standings data: cache for 2 minutes, stale-while-revalidate for 1 minute
+        res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate=60');
+      }
     }
     
     // Pass the exact status code from the football API (e.g., 429 if rate limited)

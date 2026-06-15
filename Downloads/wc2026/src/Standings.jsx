@@ -35,11 +35,12 @@ export default function Standings() {
   const [subTab, setSubTab] = useState('groups')
 
   useEffect(() => {
-    async function load() {
+    async function load(showSpinner = true) {
+      if (showSpinner) setLoading(true)
       try {
         const [standingsJson, matchesJson] = await Promise.allSettled([
           fetchStandings(),
-          fetchMatches(''),
+          fetchMatches(),
         ])
 
         // Build live standings map: teamName -> row
@@ -72,7 +73,15 @@ export default function Standings() {
         setLoading(false)
       }
     }
-    load()
+    
+    load(true)
+    
+    // Auto-refresh standings every 60 seconds in the background
+    const interval = setInterval(() => {
+      load(false)
+    }, 60000)
+    
+    return () => clearInterval(interval)
   }, [])
 
   function getLiveStats(teamName) {

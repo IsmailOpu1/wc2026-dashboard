@@ -76,9 +76,19 @@ export default function Matches() {
     if (forceRefresh) clearCache()
     setLoading(true); setError(null)
     try {
-      const status = filter === 'IN_PLAY' ? 'IN_PLAY,PAUSED' : filter === 'ALL' ? '' : filter
-      const json = await fetchMatches(status)
-      setMatches(json.matches || [])
+      const json = await fetchMatches()
+      const allMatches = json.matches || []
+      
+      let filtered = allMatches
+      if (filter === 'IN_PLAY') {
+        filtered = allMatches.filter(m => m.status === 'IN_PLAY' || m.status === 'PAUSED')
+      } else if (filter === 'SCHEDULED') {
+        filtered = allMatches.filter(m => m.status === 'SCHEDULED' || m.status === 'TIMED')
+      } else if (filter === 'FINISHED') {
+        filtered = allMatches.filter(m => m.status === 'FINISHED')
+      }
+      
+      setMatches(filtered)
     } catch (e) { setError(e.message) }
     finally { setLoading(false) }
   }, [filter])
@@ -87,8 +97,10 @@ export default function Matches() {
   useEffect(() => {
     async function fetchLive() {
       try {
-        const json = await fetchMatches('IN_PLAY,PAUSED')
-        setAlwaysLive(json.matches || [])
+        const json = await fetchMatches()
+        const allMatches = json.matches || []
+        const live = allMatches.filter(m => m.status === 'IN_PLAY' || m.status === 'PAUSED')
+        setAlwaysLive(live)
       } catch {}
     }
     fetchLive()

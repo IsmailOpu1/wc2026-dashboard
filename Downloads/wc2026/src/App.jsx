@@ -201,8 +201,10 @@ export default function App() {
   useEffect(() => {
     async function fetchLive() {
       try {
-        const json = await fetchMatches('IN_PLAY,PAUSED')
-        setLiveMatches(json.matches || [])
+        const json = await fetchMatches()
+        const allMatches = json.matches || []
+        const live = allMatches.filter(m => m.status === 'IN_PLAY' || m.status === 'PAUSED')
+        setLiveMatches(live)
       } catch {}
     }
     fetchLive()
